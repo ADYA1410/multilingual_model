@@ -1,0 +1,151 @@
+# Create Comprehensive Sentiment Lexicons for ES, FR, DE
+# Since some AFINN datasets are not available, we'll create our own
+
+import json
+import os
+
+def create_sentiment_lexicons():
+    """Create comprehensive sentiment lexicons for Spanish, French, and German"""
+    
+    # Spanish sentiment words
+    spanish_sentiment = {
+        'positive': [
+            'bueno', 'excelente', 'maravilloso', 'fantástico', 'increíble', 'genial', 'perfecto',
+            'amor', 'hermoso', 'bonito', 'lindo', 'precioso', 'magnífico', 'espectacular',
+            'brillante', 'estupendo', 'tremendo', 'fenomenal', 'súper', 'increíble', 'asombroso',
+            'feliz', 'alegre', 'contento', 'satisfecho', 'orgulloso', 'emocionado', 'entusiasmado',
+            'divertido', 'gracioso', 'cómico', 'entretenido', 'interesante', 'fascinante',
+            'exitoso', 'triunfante', 'victorioso', 'ganador', 'campeón', 'héroe', 'estrella',
+            'mejor', 'superior', 'excepcional', 'único', 'especial', 'extraordinario',
+            'fácil', 'simple', 'sencillo', 'cómodo', 'práctico', 'útil', 'valioso',
+            'nuevo', 'fresco', 'moderno', 'actual', 'contemporáneo', 'innovador',
+            'grande', 'enorme', 'gigante', 'masivo', 'impresionante', 'sorprendente',
+            'rápido', 'veloz', 'ágil', 'eficiente', 'productivo', 'efectivo',
+            'seguro', 'confiable', 'estable', 'sólido', 'fuerte', 'robusto',
+            'limpio', 'puro', 'fresco', 'natural', 'auténtico', 'genuino',
+            'inteligente', 'sabio', 'listo', 'astuto', 'hábil', 'talentoso',
+            'amable', 'gentil', 'cariñoso', 'tierno', 'dulce', 'suave', 'delicado',
+            'quiero', 'quieres', 'quiere', 'queremos', 'queréis', 'quieren'  # Spanish verb forms
+        ],
+        'negative': [
+            'malo', 'terrible', 'horrible', 'asqueroso', 'odiar', 'peor', 'decepcionante',
+            'odio', 'asco', 'repugnante', 'desagradable', 'feo', 'horroroso', 'espantoso',
+            'triste', 'deprimido', 'melancólico', 'desanimado', 'abatido', 'desconsolado',
+            'enojado', 'furioso', 'irritado', 'molesto', 'fastidiado', 'indignado',
+            'preocupado', 'ansioso', 'nervioso', 'tenso', 'estresado', 'agobiado',
+            'confundido', 'perdido', 'desorientado', 'desconcertado', 'despistado',
+            'aburrido', 'monótono', 'tedioso', 'cansado', 'fatigado', 'agotado',
+            'difícil', 'complicado', 'complejo', 'confuso', 'problemático', 'trabajoso',
+            'lento', 'pesado', 'torpe', 'ineficiente', 'improductivo', 'inútil',
+            'peligroso', 'riesgoso', 'inseguro', 'inestable', 'frágil', 'débil',
+            'sucio', 'contaminado', 'impuro', 'artificial', 'falso', 'fingido',
+            'tonto', 'estúpido', 'idiota', 'imbécil', 'necio', 'ignorante',
+            'grosero', 'malo', 'cruel', 'duro', 'áspero', 'brusco', 'agresivo',
+            'pequeño', 'minúsculo', 'insignificante', 'trivial', 'banal', 'común',
+            'viejo', 'antiguo', 'obsoleto', 'pasado', 'desactualizado', 'caduco',
+            'caro', 'costoso', 'excesivo', 'exagerado', 'desproporcionado',
+            'barato', 'devaluado', 'despreciable', 'miserable', 'pobre', 'escaso'
+        ]
+    }
+    
+    # French sentiment words
+    french_sentiment = {
+        'positive': [
+            'bon', 'excellent', 'merveilleux', 'fantastique', 'incroyable', 'génial', 'parfait',
+            'amour', 'beau', 'joli', 'magnifique', 'splendide', 'superbe', 'éblouissant',
+            'brillant', 'formidable', 'extraordinaire', 'exceptionnel', 'remarquable',
+            'heureux', 'joyeux', 'content', 'satisfait', 'fier', 'enthousiaste', 'excité',
+            'amusant', 'drôle', 'comique', 'divertissant', 'intéressant', 'fascinant',
+            'réussi', 'triomphant', 'victorieux', 'gagnant', 'champion', 'héros', 'étoile',
+            'meilleur', 'supérieur', 'exceptionnel', 'unique', 'spécial', 'extraordinaire',
+            'facile', 'simple', 'aisé', 'confortable', 'pratique', 'utile', 'précieux',
+            'nouveau', 'frais', 'moderne', 'actuel', 'contemporain', 'innovant',
+            'grand', 'énorme', 'gigantesque', 'massif', 'impressionnant', 'surprenant',
+            'rapide', 'vite', 'agile', 'efficace', 'productif', 'effectif',
+            'sûr', 'fiable', 'stable', 'solide', 'fort', 'robuste',
+            'propre', 'pur', 'frais', 'naturel', 'authentique', 'véritable',
+            'intelligent', 'sage', 'malin', 'habile', 'talentueux', 'doué',
+            'gentil', 'aimable', 'tendre', 'doux', 'délicat', 'charmant'
+        ],
+        'negative': [
+            'mauvais', 'terrible', 'horrible', 'dégoûtant', 'détester', 'pire', 'décevant',
+            'haine', 'dégoût', 'répugnant', 'désagréable', 'laid', 'horrible', 'effrayant',
+            'triste', 'déprimé', 'mélancolique', 'découragé', 'abattu', 'désolé',
+            'en colère', 'furieux', 'irrité', 'énervé', 'contrarié', 'indigné',
+            'inquiet', 'anxieux', 'nerveux', 'tendu', 'stressé', 'accablé',
+            'confus', 'perdu', 'désorienté', 'déconcerté', 'perplexe',
+            'ennuyeux', 'monotone', 'fastidieux', 'fatigué', 'épuisé', 'las',
+            'difficile', 'compliqué', 'complexe', 'confus', 'problématique', 'pénible',
+            'lent', 'lourd', 'maladroit', 'inefficace', 'improductif', 'inutile',
+            'dangereux', 'risqué', 'peu sûr', 'instable', 'fragile', 'faible',
+            'sale', 'pollué', 'impur', 'artificiel', 'faux', 'feint',
+            'bête', 'stupide', 'idiot', 'imbécile', 'niais', 'ignorant',
+            'grossier', 'méchant', 'cruel', 'dur', 'brutal', 'agressif',
+            'petit', 'minuscule', 'insignifiant', 'trivial', 'banal', 'commun',
+            'vieux', 'ancien', 'obsolète', 'dépassé', 'désuet', 'caduc',
+            'cher', 'coûteux', 'excessif', 'exagéré', 'démesuré',
+            'bon marché', 'dévalué', 'méprisable', 'misérable', 'pauvre', 'rare'
+        ]
+    }
+    
+    # German sentiment words
+    german_sentiment = {
+        'positive': [
+            'gut', 'ausgezeichnet', 'wunderbar', 'fantastisch', 'unglaublich', 'großartig', 'perfekt',
+            'Liebe', 'schön', 'hübsch', 'herrlich', 'prächtig', 'großartig', 'brillant',
+            'brillant', 'großartig', 'außergewöhnlich', 'bemerkenswert', 'herausragend',
+            'glücklich', 'fröhlich', 'zufrieden', 'stolz', 'begeistert', 'aufgeregt',
+            'lustig', 'komisch', 'unterhaltsam', 'interessant', 'faszinierend',
+            'erfolgreich', 'triumphierend', 'siegreich', 'gewinnend', 'Champion', 'Held', 'Star',
+            'besser', 'überlegen', 'außergewöhnlich', 'einzigartig', 'besonders', 'außergewöhnlich',
+            'einfach', 'leicht', 'bequem', 'praktisch', 'nützlich', 'wertvoll',
+            'neu', 'frisch', 'modern', 'aktuell', 'zeitgemäß', 'innovativ',
+            'groß', 'riesig', 'gigantisch', 'massiv', 'beeindruckend', 'überraschend',
+            'schnell', 'rasch', 'agil', 'effizient', 'produktiv', 'effektiv',
+            'sicher', 'zuverlässig', 'stabil', 'solide', 'stark', 'robust',
+            'sauber', 'rein', 'frisch', 'natürlich', 'authentisch', 'echt',
+            'intelligent', 'weise', 'schlau', 'geschickt', 'talentiert', 'begabt',
+            'nett', 'freundlich', 'zärtlich', 'sanft', 'zart', 'charmant'
+        ],
+        'negative': [
+            'schlecht', 'schrecklich', 'furchtbar', 'ekelhaft', 'hassen', 'schlimmste', 'enttäuschend',
+            'Hass', 'Ekel', 'widerlich', 'unangenehm', 'hässlich', 'grauenhaft', 'erschreckend',
+            'traurig', 'deprimiert', 'melancholisch', 'entmutigt', 'niedergeschlagen', 'betrübt',
+            'wütend', 'wütend', 'verärgert', 'verärgert', 'verärgert', 'empört',
+            'besorgt', 'ängstlich', 'nervös', 'angespannt', 'gestresst', 'überwältigt',
+            'verwirrt', 'verloren', 'desorientiert', 'verwirrt', 'verblüfft',
+            'langweilig', 'monoton', 'mühsam', 'müde', 'erschöpft', 'müde',
+            'schwierig', 'kompliziert', 'komplex', 'verwirrt', 'problematisch', 'mühsam',
+            'langsam', 'schwer', 'ungeschickt', 'ineffizient', 'unproduktiv', 'nutzlos',
+            'gefährlich', 'riskant', 'unsicher', 'instabil', 'zerbrechlich', 'schwach',
+            'schmutzig', 'verschmutzt', 'unrein', 'künstlich', 'falsch', 'vorgetäuscht',
+            'dumm', 'dumm', 'idiotisch', 'dumm', 'töricht', 'unwissend',
+            'grob', 'böse', 'grausam', 'hart', 'brutal', 'aggressiv',
+            'klein', 'winzig', 'unbedeutend', 'trivial', 'banal', 'gewöhnlich',
+            'alt', 'alt', 'veraltet', 'veraltet', 'veraltet', 'veraltet',
+            'teuer', 'kostspielig', 'übertrieben', 'übertrieben', 'unverhältnismäßig',
+            'billig', 'entwertet', 'verachtenswert', 'elend', 'arm', 'selten'
+        ]
+    }
+    
+    # Create comprehensive lexicons
+    lexicons = {
+        'es': spanish_sentiment,
+        'fr': french_sentiment,
+        'de': german_sentiment
+    }
+    
+    # Save lexicons
+    with open('sentiment_lexicons.json', 'w', encoding='utf-8') as f:
+        json.dump(lexicons, f, ensure_ascii=False, indent=2)
+    
+    print("✅ Sentiment lexicons created:")
+    for lang, sentiment in lexicons.items():
+        pos_count = len(sentiment['positive'])
+        neg_count = len(sentiment['negative'])
+        print(f"   {lang.upper()}: {pos_count} positive, {neg_count} negative words")
+    
+    return lexicons
+
+if __name__ == "__main__":
+    create_sentiment_lexicons()
